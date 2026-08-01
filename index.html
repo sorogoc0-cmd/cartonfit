@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="fr">
+<html lang="de">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Calculez combien de petits cartons entrent dans un grand carton.">
-  <title>CartonFit — Calculateur d’emballage</title>
+  <meta name="description" content="Berechnen Sie, wie viele kleine Kartons in einen großen Karton passen.">
+  <title>CartonFit — Verpackungsrechner</title>
   <style>
     :root{--ink:#112c26;--muted:#687a74;--orange:#ff6a2a;--cream:#f7f3e9;--line:#d7ded9}
     *{box-sizing:border-box}body{margin:0;background:#fbfcf9;color:var(--ink);font-family:Arial,sans-serif}button,input{font:inherit}
@@ -21,29 +21,29 @@
   </style>
 </head>
 <body>
-  <header class="top"><div class="brand"><span class="mark">CF</span>CartonFit</div><span class="tag">Calculateur d’emballage</span></header>
-  <section class="hero"><div class="eyebrow">— Optimisez votre espace</div><h1>Combien de petits cartons<br>dans le grand&nbsp;?</h1><p>Entrez les dimensions. Nous testons toutes les orientations et vous montrons exactement comment les ranger.</p></section>
+  <header class="top"><div class="brand"><span class="mark">CF</span>CartonFit</div><span class="tag">Verpackungsrechner</span></header>
+  <section class="hero"><div class="eyebrow">— Platz optimal nutzen</div><h1>Wie viele kleine Kartons<br>passen in den großen?</h1><p>Geben Sie die Maße ein. Wir prüfen alle Ausrichtungen und zeigen Ihnen genau, wie Sie die Kartons anordnen.</p></section>
   <main class="work">
     <section class="controls">
-      <div class="unitrow"><span>Unité de mesure</span><div class="units"><button data-unit="mm">mm</button><button class="active" data-unit="cm">cm</button><button data-unit="m">m</button></div></div>
-      <div class="card"><div class="head"><span class="num">01</span><div><h2>Grand carton</h2><p>Dimensions intérieures disponibles</p></div></div><div class="fields" id="outer"></div></div>
-      <div class="card"><div class="head"><span class="num">02</span><div><h2>Petit carton</h2><p>Dimensions extérieures d’un carton</p></div></div><div class="fields" id="inner"></div></div>
-      <details><summary>Options pratiques <span>＋</span></summary><div class="opts" id="options"></div></details>
+      <div class="unitrow"><span>Maßeinheit</span><div class="units"><button data-unit="mm">mm</button><button class="active" data-unit="cm">cm</button><button data-unit="m">m</button></div></div>
+      <div class="card"><div class="head"><span class="num">01</span><div><h2>Großer Karton</h2><p>Verfügbare Innenmaße</p></div></div><div class="fields" id="outer"></div></div>
+      <div class="card"><div class="head"><span class="num">02</span><div><h2>Kleiner Karton</h2><p>Außenmaße eines Kartons</p></div></div><div class="fields" id="inner"></div></div>
+      <details><summary>Praktische Optionen <span>＋</span></summary><div class="opts" id="options"></div></details>
     </section>
     <aside class="result" aria-live="polite">
-      <div class="label">MEILLEURE CONFIGURATION</div><div class="count"><strong id="count">64</strong><span>petits<br>cartons</span></div><div class="warning" id="warning">Limité par le poids maximal indiqué</div>
+      <div class="label">BESTE ANORDNUNG</div><div class="count"><strong id="count">64</strong><span>kleine<br>Kartons</span></div><div class="warning" id="warning">Durch das angegebene Maximalgewicht begrenzt</div>
       <div class="diagram"><div class="grid" id="grid"></div></div>
-      <div class="formula"><div><b id="cols">4</b><span>en longueur</span></div><em>×</em><div><b id="rows">4</b><span>en largeur</span></div><em>×</em><div><b id="layers">4</b><span>couches</span></div></div>
-      <div class="instructions"><h3>Comment les ordonner</h3><ol><li><span>1</span><p id="step1"></p></li><li><span>2</span><p id="step2"></p></li><li><span>3</span><p id="step3"></p></li></ol></div><p class="note">Calcul en grille droite, sans déformation ni emboîtement des cartons.</p>
+      <div class="formula"><div><b id="cols">4</b><span>in Längsrichtung</span></div><em>×</em><div><b id="rows">4</b><span>in Querrichtung</span></div><em>×</em><div><b id="layers">4</b><span>Lagen</span></div></div>
+      <div class="instructions"><h3>So werden sie angeordnet</h3><ol><li><span>1</span><p id="step1"></p></li><li><span>2</span><p id="step2"></p></li><li><span>3</span><p id="step3"></p></li></ol></div><p class="note">Berechnung in einem geraden Raster, ohne Verformung oder Ineinanderstellen der Kartons.</p>
     </aside>
   </main>
   <script>
     let unit="cm";const state={ol:120,ow:80,oh:100,il:30,iw:20,ih:25,gap:0,max:0,weight:0};
-    const labels={ol:"Longueur",ow:"Largeur",oh:"Hauteur",il:"Longueur",iw:"Largeur",ih:"Hauteur",gap:"Marge sur chaque face",max:"Poids maximal du grand",weight:"Poids d’un petit"};
+    const labels={ol:"Länge",ow:"Breite",oh:"Höhe",il:"Länge",iw:"Breite",ih:"Höhe",gap:"Abstand auf jeder Seite",max:"Maximalgewicht des großen Kartons",weight:"Gewicht eines kleinen Kartons"};
     function field(key,suffix){return `<label class="field"><span>${labels[key]}</span><span class="input"><input type="number" min="0" step="any" data-key="${key}" value="${state[key]}"><small data-suffix="${suffix}">${suffix==="unit"?unit:suffix}</small></span></label>`}
     function mount(){outer.innerHTML=["ol","ow","oh"].map(k=>field(k,"unit")).join("");inner.innerHTML=["il","iw","ih"].map(k=>field(k,"unit")).join("");options.innerHTML=field("gap","unit")+field("max","kg")+field("weight","kg");bind()}
     function bind(){document.querySelectorAll("input[data-key]").forEach(el=>el.oninput=()=>{state[el.dataset.key]=Math.max(0,Number(el.value));calc()})}
-    function calc(){const O=[state.ol-state.gap*2,state.ow-state.gap*2,state.oh-state.gap*2].map(v=>Math.max(0,v)),I=[state.il,state.iw,state.ih],p=[[0,1,2],[0,2,1],[1,0,2],[1,2,0],[2,0,1],[2,1,0]];let best={n:-1};p.forEach(a=>{let c=I[a[0]]?Math.floor(O[0]/I[a[0]]):0,r=I[a[1]]?Math.floor(O[1]/I[a[1]]):0,l=I[a[2]]?Math.floor(O[2]/I[a[2]]):0,n=c*r*l;if(n>best.n)best={c,r,l,n,x:I[a[0]],y:I[a[1]],z:I[a[2]]}});let limit=state.max&&state.weight?Math.floor(state.max/state.weight):Infinity,total=Math.min(best.n,limit),cap=best.c*best.r,full=cap?Math.floor(total/cap):0,rem=cap?total%cap:0;count.textContent=total;cols.textContent=best.c;rows.textContent=best.r;layers.textContent=best.l;warning.style.display=total<best.n?"inline-block":"none";let vc=Math.min(best.c,10),vr=Math.min(best.r,7);grid.style.gridTemplateColumns=`repeat(${Math.max(1,vc)},1fr)`;grid.innerHTML=Array.from({length:Math.max(1,vc*vr)},()=>'<span class="cell"><i></i></span>').join("");step1.innerHTML=`Posez chaque carton avec la face <b>${best.x} × ${best.y} ${unit}</b> au sol.`;step2.innerHTML=`Formez des rangées de <b>${best.c}</b>, puis placez <b>${best.r} rangée${best.r>1?"s":""}</b> par couche.`;step3.innerHTML=`Empilez <b>${Math.min(full,best.l)} couche${best.l>1?"s":""}</b>${rem?` puis ajoutez ${rem} carton${rem>1?"s":""} sur la dernière.`:"."}`}
+    function calc(){const O=[state.ol-state.gap*2,state.ow-state.gap*2,state.oh-state.gap*2].map(v=>Math.max(0,v)),I=[state.il,state.iw,state.ih],p=[[0,1,2],[0,2,1],[1,0,2],[1,2,0],[2,0,1],[2,1,0]];let best={n:-1};p.forEach(a=>{let c=I[a[0]]?Math.floor(O[0]/I[a[0]]):0,r=I[a[1]]?Math.floor(O[1]/I[a[1]]):0,l=I[a[2]]?Math.floor(O[2]/I[a[2]]):0,n=c*r*l;if(n>best.n)best={c,r,l,n,x:I[a[0]],y:I[a[1]],z:I[a[2]]}});let limit=state.max&&state.weight?Math.floor(state.max/state.weight):Infinity,total=Math.min(best.n,limit),cap=best.c*best.r,full=cap?Math.floor(total/cap):0,rem=cap?total%cap:0;count.textContent=total;cols.textContent=best.c;rows.textContent=best.r;layers.textContent=best.l;warning.style.display=total<best.n?"inline-block":"none";let vc=Math.min(best.c,10),vr=Math.min(best.r,7);grid.style.gridTemplateColumns=`repeat(${Math.max(1,vc)},1fr)`;grid.innerHTML=Array.from({length:Math.max(1,vc*vr)},()=>'<span class="cell"><i></i></span>').join("");step1.innerHTML=`Stellen Sie jeden Karton mit der Fläche <b>${best.x} × ${best.y} ${unit}</b> nach unten.`;step2.innerHTML=`Bilden Sie Reihen mit <b>${best.c}</b> Kartons und legen Sie <b>${best.r} Reihe${best.r!==1?"n":""}</b> pro Lage.`;step3.innerHTML=`Stapeln Sie <b>${Math.min(full,best.l)} Lage${best.l!==1?"n":""}</b>${rem?` und legen Sie ${rem} weitere${rem===1?"n Karton":" Kartons"} auf die letzte Lage.`:"."}`}
     document.querySelectorAll("[data-unit]").forEach(b=>b.onclick=()=>{unit=b.dataset.unit;document.querySelectorAll("[data-unit]").forEach(x=>x.classList.toggle("active",x===b));document.querySelectorAll('[data-suffix="unit"]').forEach(x=>x.textContent=unit);calc()});
     mount();calc();
   </script>
